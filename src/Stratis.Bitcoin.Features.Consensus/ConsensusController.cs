@@ -40,6 +40,18 @@ namespace Stratis.Bitcoin.Features.Consensus
         }
 
         /// <summary>
+        /// Implements the getbestblockhash RPC call.
+        /// </summary>
+        /// <returns>A <see cref="uint256"/> hash of the block at the consensus tip.</returns>
+        [ActionName("getbestblockhash")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [ActionDescription("Get the hash of the block at the consensus tip.")]
+        public uint256 GetBestBlockHashRPC()
+        {
+            return this.ChainState.ConsensusTip?.HashBlock;
+        }
+
+        /// <summary>
         /// Get the threshold states of softforks currently being deployed.
         /// Allowable states are: Defined, Started, LockedIn, Failed, Active.
         /// </summary>
@@ -75,17 +87,42 @@ namespace Stratis.Bitcoin.Features.Consensus
         /// <remarks>This is an API implementation of an RPC call.</remarks>
         [Route("getbestblockhash")]
         [HttpGet]
-        public IActionResult GetBestBlockHash()
+        public IActionResult GetBestBlockHashAPI()
         {
             try
             {
-                return this.Json(this.ChainState.ConsensusTip?.HashBlock);
+                return this.Json(this.GetBestBlockHashRPC());
             }
             catch (Exception e)
             {
                 this.logger.LogError("Exception occurred: {0}", e.ToString());
                 return ErrorHelpers.BuildErrorResponse(HttpStatusCode.BadRequest, e.Message, e.ToString());
             }
+        }
+
+        /// <summary>
+        /// Implements the getblockhash RPC call.
+        /// </summary>
+        /// <param name="height">The requested block height.</param>
+        /// <returns>A <see cref="uint256"/> hash of the block at the given height. <c>Null</c> if block not found.</returns>
+        [ActionName("getblockhash")]
+        [ActionDescription("Gets the hash of the block at the given height.")]
+        [HttpGet]
+        public uint256 GetBlockHashRPC(int height)
+        {
+            this.logger.LogDebug("GetBlockHash {0}", height);
+
+            uint256 bestBlockHash = this.ConsensusManager.Tip?.HashBlock;
+            ChainedHeader bestBlock = bestBlockHash == null ? null : this.ChainIndexer.GetHeader(bestBlockHash);
+            if (bestBlock == null)
+                return null;
+            ChainedHeader block = this.ChainIndexer.GetHeader(height);
+            uint256 hash = block == null || block.Height > bestBlock.Height ? null : block.HashBlock;
+
+            if (hash == null)
+                throw new BlockNotFoundException($"No block found at height {height}");
+
+            return hash;
         }
 
         /// <summary>
@@ -96,23 +133,11 @@ namespace Stratis.Bitcoin.Features.Consensus
         /// <remarks>This is an API implementation of an RPC call.</remarks>
         [Route("getblockhash")]
         [HttpGet]
-        public IActionResult GetBlockHash([FromQuery] int height)
+        public IActionResult GetBlockHashAPI([FromQuery] int height)
         {
             try
             {
-                this.logger.LogDebug("GetBlockHash {0}", height);
-
-                uint256 bestBlockHash = this.ConsensusManager.Tip?.HashBlock;
-                ChainedHeader bestBlock = bestBlockHash == null ? null : this.ChainIndexer.GetHeader(bestBlockHash);
-                if (bestBlock == null)
-                    return null;
-                ChainedHeader block = this.ChainIndexer.GetHeader(height);
-                uint256 hash = block == null || block.Height > bestBlock.Height ? null : block.HashBlock;
-
-                if (hash == null)
-                    throw new BlockNotFoundException($"No block found at height {height}");
-
-                return this.Json(hash);
+                return this.Json(this.GetBlockHashRPC(height));
             }
             catch (Exception e)
             {
