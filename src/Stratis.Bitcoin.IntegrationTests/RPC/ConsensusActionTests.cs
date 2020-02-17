@@ -17,7 +17,7 @@ namespace Stratis.Bitcoin.IntegrationTests.RPC
             IFullNode fullNode = this.BuildServicedNode(dir);
             var controller = fullNode.NodeController<ConsensusRPCController>();
 
-            uint256 result = controller.GetBestBlockHashRPC();
+            uint256 result = controller.GetBestBlockHash();
 
             Assert.Null(result);
         }
@@ -30,7 +30,7 @@ namespace Stratis.Bitcoin.IntegrationTests.RPC
             IFullNode fullNode = this.BuildServicedNode(dir);
             var controller = fullNode.NodeController<ConsensusRPCController>();
 
-            uint256 result = controller.GetBlockHashRPC(0);
+            uint256 result = controller.GetBlockHash(0);
 
             Assert.Null(result);
         }
