@@ -1,5 +1,5 @@
 ﻿using NBitcoin;
-using SwarmPower.Utilities;
+using HashToBeWild.Utilities;
 
 namespace Stratis.Bitcoin.Networks
 {

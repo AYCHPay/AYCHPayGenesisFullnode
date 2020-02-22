@@ -4,9 +4,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using SwarmPower.Utilities.Models;
+using HashToBeWild.Utilities.Models;
 
-namespace SwarmPower.Utilities
+namespace HashToBeWild.Utilities
 {
     // based on: https://en.bitcoin.it/wiki/List_of_address_prefixes
     public class BtcAddressMapper

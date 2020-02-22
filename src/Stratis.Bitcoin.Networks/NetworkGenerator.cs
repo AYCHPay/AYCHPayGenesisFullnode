@@ -18,8 +18,8 @@ namespace Stratis.Bitcoin.Networks
     using Stratis.Bitcoin.Features.MemoryPool.Rules;
     using Stratis.Bitcoin.Networks.Deployments;
     using Stratis.Bitcoin.Networks.Policies;
-    using SwarmPower.Utilities;
-    using SwarmPower.Utilities.Models;
+    using HashToBeWild.Utilities;
+    using HashToBeWild.Utilities.Models;
 
     public class NetworkGenerator : Network
     {
@@ -117,10 +117,10 @@ namespace Stratis.Bitcoin.Networks
         {
             switch (this.seed.NetworkType)
             {
-                case SwarmPower.Utilities.Models.NetworkType.Unknown:
+                case HashToBeWild.Utilities.Models.NetworkType.Unknown:
                     break;
 
-                case SwarmPower.Utilities.Models.NetworkType.Mainnet:
+                case HashToBeWild.Utilities.Models.NetworkType.Mainnet:
                     {
                         this.NetworkType = NBitcoin.NetworkType.Mainnet;
                         this.PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
@@ -128,7 +128,7 @@ namespace Stratis.Bitcoin.Networks
                     }
                     break;
 
-                case SwarmPower.Utilities.Models.NetworkType.Testnet:
+                case HashToBeWild.Utilities.Models.NetworkType.Testnet:
                     {
                         this.NetworkType = NBitcoin.NetworkType.Testnet;
                         this.PowLimit = new Target(new uint256("0000ffff00000000000000000000000000000000000000000000000000000000"));
@@ -136,7 +136,7 @@ namespace Stratis.Bitcoin.Networks
                     }
                     break;
 
-                case SwarmPower.Utilities.Models.NetworkType.Regtestnet:
+                case HashToBeWild.Utilities.Models.NetworkType.Regtestnet:
                     {
                         this.NetworkType = NBitcoin.NetworkType.Regtest;
                         this.PowLimit = new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
@@ -226,7 +226,7 @@ namespace Stratis.Bitcoin.Networks
         private void BuildCheckpoints()
         {
             this.Checkpoints = new Dictionary<int, NBitcoin.CheckpointInfo>();
-            foreach (KeyValuePair<int, SwarmPower.Utilities.Models.CheckpointInfo> item in this.seed.CheckPoints)
+            foreach (KeyValuePair<int, HashToBeWild.Utilities.Models.CheckpointInfo> item in this.seed.CheckPoints)
             {
                 this.Checkpoints[item.Key] = new NBitcoin.CheckpointInfo(new uint256(item.Value.Hash), new uint256(item.Value.StakeModifierV2));
             }

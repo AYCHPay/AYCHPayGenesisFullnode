@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SwarmPower.Utilities
+namespace HashToBeWild.Utilities
 {
     public class AlphabetMapper
     {
