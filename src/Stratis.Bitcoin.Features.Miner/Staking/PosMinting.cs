@@ -258,7 +258,7 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
             this.systemTimeOutOfSyncSleep = 7000;
             this.lastCoinStakeSearchTime = this.dateTimeProvider.GetAdjustedTimeAsUnixTimestamp();
             this.lastCoinStakeSearchPrevBlockHash = 0;
-            this.targetReserveBalance = 0; // TODO:settings.targetReserveBalance
+            this.targetReserveBalance = 1000 * Money.COIN; // TODO:settings.targetReserveBalance
             this.currentState = (int)CurrentState.Idle;
 
             this.rpcGetStakingInfoModel = new Models.GetStakingInfoModel();
@@ -714,8 +714,14 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 }
             }
 
+            // Input to coinstake transaction. Moved up, so we can use the value in the calculation
+            UtxoStakeDescription coinstakeInput = workersResult.KernelCoin;
+
+            // Get the height of the coinstake tx
+            uint stakeTxHeight = coinstakeInput.UtxoSet.Coins.Height;
+
             // Get reward for newly created block.
-            long reward = fees + this.consensusManager.ConsensusRules.GetRule<PosCoinviewRule>().GetProofOfStakeReward(chainTip.Height + 1);
+            long reward = fees + this.consensusManager.ConsensusRules.GetRule<PosCoinviewRuleGnet>().GetProofOfStakeReward(chainTip.Height + 1, coinstakeInput.TxOut.Value, stakeTxHeight);
             if (reward <= 0)
             {
                 // TODO: This can't happen unless we remove reward for mined block.
@@ -724,9 +730,6 @@ namespace Stratis.Bitcoin.Features.Miner.Staking
                 this.logger.LogTrace("(-)[NO_REWARD]:false");
                 return false;
             }
-
-            // Input to coinstake transaction.
-            UtxoStakeDescription coinstakeInput = workersResult.KernelCoin;
 
             // Total amount of input values in coinstake transaction.
             long coinstakeOutputValue = coinstakeInput.TxOut.Value + reward;

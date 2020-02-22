@@ -86,5 +86,10 @@
         /// Current version of the CirrusNode.
         /// </summary>
         CIRRUS_VERSION = 80000,
+
+        /// <summary>
+        /// Current version of the Genesis Network.
+        /// </summary>
+        GNET_VERSION = 90000,
     }
 }
