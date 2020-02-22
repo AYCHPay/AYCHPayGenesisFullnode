@@ -4,9 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using SwarmPower.Utilities.Models;
+using HashToBeWild.Utilities.Models;
 
-namespace SwarmPower.Utilities
+namespace HashToBeWild.Utilities
 {
     /// <summary>
     /// A simple class to generate network seed object, for known dynamic networks

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SwarmPower.Utilities.Models
+namespace HashToBeWild.Utilities.Models
 {
     public class NetworkSeed
     {

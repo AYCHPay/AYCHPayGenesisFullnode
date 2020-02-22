@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SwarmPower.Utilities
+namespace HashToBeWild.Utilities
 {
     public class PhoneMnemonicsMapper
     {

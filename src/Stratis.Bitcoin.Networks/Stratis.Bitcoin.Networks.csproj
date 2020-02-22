@@ -22,10 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HashToBeWild.Utilities\HashToBeWild.Utilities.csproj" />
     <ProjectReference Include="..\NBitcoin\NBitcoin.csproj" />
     <ProjectReference Include="..\Stratis.Bitcoin.Features.Consensus\Stratis.Bitcoin.Features.Consensus.csproj" />
     <ProjectReference Include="..\Stratis.Bitcoin.Features.MemoryPool\Stratis.Bitcoin.Features.MemoryPool.csproj" />
-    <ProjectReference Include="..\SwarmPower.Utilities\SwarmPower.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
