@@ -417,12 +417,18 @@ namespace Stratis.Bitcoin.Networks
 
         private void BuildPortNumbers()
         {
-            int baseMultiplier = this.ChecksumGenerator.ByteSum(this.CoinTicker);
-            var basePort = this.PhoneMnemonicsMap.ResolveLong(this.CoinTicker[0].ToString(), 1) * baseMultiplier;
             this.DefaultPort = (int)this.PhoneMnemonicsMap.ResolveLong(this.CoinTicker, 4);
-            this.DefaultRPCPort = (int)(basePort + this.PhoneMnemonicsMap.ResolveLong(Constants.PORT_NAME_RPC, 3));
-            this.DefaultAPIPort = (int)(basePort + this.PhoneMnemonicsMap.ResolveLong(Constants.PORT_NAME_API, 3));
-            this.DefaultSignalRPort = (int)(basePort + this.PhoneMnemonicsMap.ResolveLong(Constants.PORT_NAME_SIGNALR, 3));
+            if (this.NetworkType == NBitcoin.NetworkType.Testnet)
+            {
+                this.DefaultPort += 1000;
+            }
+            if (this.NetworkType == NBitcoin.NetworkType.Regtest)
+            {
+                this.DefaultPort += 2000;
+            }
+            this.DefaultRPCPort = this.DefaultPort + 1;
+            this.DefaultAPIPort = this.DefaultRPCPort + 1;
+            this.DefaultSignalRPort = this.DefaultAPIPort + 1;
         }
 
         private Block CreateGenesisBlock(ConsensusFactory consensusFactory, uint nTime, uint nNonce, uint nBits, int nVersion, Money genesisReward)
