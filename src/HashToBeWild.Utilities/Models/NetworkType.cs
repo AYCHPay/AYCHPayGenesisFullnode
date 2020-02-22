@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SwarmPower.Utilities.Models
+namespace HashToBeWild.Utilities.Models
 {
     public enum NetworkType
     {

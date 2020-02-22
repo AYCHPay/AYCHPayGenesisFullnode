@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SwarmPower.Utilities
+namespace HashToBeWild.Utilities
 {
     public class ChecksumGenerator
     {
