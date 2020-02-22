@@ -29,7 +29,7 @@ namespace Stratis.GenesisD
                 var nodeSettings = new NodeSettings(networksSelector: Networks.Genesis,
                     protocolVersion: ProtocolVersion.GNET_VERSION, args: args)
                 {
-                    MinProtocolVersion = ProtocolVersion.GNET_VERSION
+                    MinProtocolVersion = ProtocolVersion.ALT_PROTOCOL_VERSION
                 };
 
                 IFullNodeBuilder nodeBuilder = new FullNodeBuilder()
