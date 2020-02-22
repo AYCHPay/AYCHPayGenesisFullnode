@@ -347,7 +347,7 @@ namespace Stratis.Bitcoin.Networks
             bob.AppendLine("this.Name: " + this.Name + ";");
             bob.AppendLine("this.CoinTicker: " + this.CoinTicker + ";");
             bob.AppendLine("this.NetworkType: " + this.NetworkType + ";");
-            bob.AppendLine("this.Magic: " + this.Magic + ";");
+            bob.AppendLine("this.Magic: " + this.Magic + "; // 0x"  + this.Magic.ToString("X"));
             bob.AppendLine("this.DefaultPort: " + this.DefaultPort + ";");
             bob.AppendLine("this.DefaultRPCPort: " + this.DefaultRPCPort + ";");
             bob.AppendLine("this.DefaultAPIPort: " + this.DefaultAPIPort + ";");
@@ -362,7 +362,7 @@ namespace Stratis.Bitcoin.Networks
             bob.AppendLine("this.DefaultConfigFilename: " + this.DefaultConfigFilename + ";");
             bob.AppendLine("this.MaxTimeOffsetSeconds: " + this.MaxTimeOffsetSeconds + ";");
             bob.AppendLine("this.DefaultBanTimeSeconds: " + this.DefaultBanTimeSeconds + ";");
-            bob.AppendLine("this.GenesisTime: " + this.GenesisTime + ";");
+            bob.AppendLine("this.GenesisTime: " + this.GenesisTime + "; // " + this.seed.Created.ToString("u") );
             bob.AppendLine("this.GenesisNonce: " + this.GenesisNonce + ";");
             bob.AppendLine("this.GenesisBits: " + this.GenesisBits + ";");
             bob.AppendLine("this.GenesisVersion: " + this.GenesisVersion + ";");
@@ -376,7 +376,7 @@ namespace Stratis.Bitcoin.Networks
                     {
                         bytes.Add("0x" + item.ToString("X2"));
                     }
-                    bob.AppendLine("this.Base58Prefixes[" + i + "] = new byte[] {" + string.Join(", ", bytes) + "};");
+                    bob.AppendLine("this.Base58Prefixes[" + i + "] = new byte[] {" + string.Join(", ", bytes) + "}; // " + ((Base58Type)i).ToString() );
                 }
             }
             //bob.AppendLine("this.: " + this.);
@@ -493,6 +493,7 @@ namespace Stratis.Bitcoin.Networks
             this.DefaultConfigFilename = this.RootFolderName + ".conf";
 
             // Time thresholds
+            this.MaxTipAge = this.seed.PowTargetSpacing * 144; // same ratio as bitcoin
             this.MaxTimeOffsetSeconds = this.seed.PowTargetSpacing * 7; // same ratio as bitcoin
             this.DefaultBanTimeSeconds = (int)(this.Consensus.MaxReorgLength * this.Consensus.TargetSpacing.TotalSeconds) / 2;
 
