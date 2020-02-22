@@ -43,7 +43,7 @@ namespace HashToBeWild.Utilities
                 PremineHeight = 2,
                 PremineReward = 500000000,
                 ProjectName = "Genesis Network Official",
-                ProofOfWorkReward = 100,
+                ProofOfWorkReward = 1000,
                 SeedListDns = new System.Collections.Generic.Dictionary<string, string>(),
                 SeedListIp = new System.Collections.Generic.List<string>(),
                 SeedNodeCount = 5,
