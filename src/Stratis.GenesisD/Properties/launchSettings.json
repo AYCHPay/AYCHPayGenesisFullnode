@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Stratis.GenesisD": {
+      "commandName": "Project",
+      "commandLineArgs": "-testnet"
+    }
+  }
+}
