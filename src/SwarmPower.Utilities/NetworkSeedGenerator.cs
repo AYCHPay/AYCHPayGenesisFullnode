@@ -27,11 +27,11 @@ namespace SwarmPower.Utilities
                 CoinbaseMaturity = 60,
                 CoinTicker = "GNET",
                 CoinType = 4637,
-                Created = new DateTime(2020, 2, 14),
+                Created = new DateTime(2020, 2, 14, 0, 0, 0, DateTimeKind.Utc),
                 DomainName = "genesisnetwork.io",
-                GenesisHash = "0x00000a894c64302f8ba3d69da0837eeecb982b4e80b77c1d63bfa8f5d09abac0",
-                GenesisMerkle = "0x56a33d28d432786c44ac2b617688c5ba87f568fed658b8dcb392f332c3d01042",
-                GenesisNonce = 1477007,
+                GenesisHash = "0x000004911fff23b63c60b60bc35b2c6a0abb97dd221c1f158e0aec62918bc226",
+                GenesisMerkle = "0xc15b2714e59aaa54c333f03a44edcef5150fa0e8934e1a87e19dc249bb1bc6e2",
+                GenesisNonce = 2265032,
                 GenesisTimestampString = "Genesis Network was Created with Love on Valentines Day 2020. Never Forget: Family First. Always.",
                 LastPowBlock = 100,
                 MajorityWindow = 1000,
@@ -48,7 +48,7 @@ namespace SwarmPower.Utilities
                 SeedListIp = new System.Collections.Generic.List<string>(),
                 SeedNodeCount = 5,
                 SubsidyHalvingInterval = 524160, // 60 * 24 * 7 * 4 * 13
-                Updated = System.DateTime.Now,
+                Updated = System.DateTime.Now.ToUniversalTime(),
             };
 
             // Set testnet changes from mainnet
@@ -56,17 +56,15 @@ namespace SwarmPower.Utilities
             genesisTestnet.NetworkType = NetworkType.Testnet;
             genesisTestnet.CoinTicker = "T" + genesisMainnet.CoinTicker;
             genesisTestnet.CoinType = 1;
-            genesisTestnet.GenesisNonce = 53585;
-            genesisTestnet.GenesisHash = "0x00008058705674dd363f3b82f2f36f0c09950e7f793669e0c3b0eec271f4ee5c";
-            genesisTestnet.GenesisMerkle = "0x56a33d28d432786c44ac2b617688c5ba87f568fed658b8dcb392f332c3d01042";
+            genesisTestnet.GenesisNonce = 228307;
+            genesisTestnet.GenesisHash = "0x0000cbb2d92858627721fd445a25ebdb9da9dc7a2ffb0213b1b7a9b488112dba";
 
             // Set regtestnet changes from testnet
             NetworkSeed genesisRegtestnet = genesisTestnet.ShallowCopy();
             genesisRegtestnet.NetworkType = NetworkType.Regtestnet;
             genesisRegtestnet.CoinTicker = "R" + genesisMainnet.CoinTicker;
             genesisRegtestnet.GenesisNonce = 0;
-            genesisRegtestnet.GenesisHash = "0x67bbdb0c41cca41b286c5c0bbbfe06175f1693ec6611b04fae6dccace7ad1662";
-            genesisRegtestnet.GenesisMerkle = "0x56a33d28d432786c44ac2b617688c5ba87f568fed658b8dcb392f332c3d01042";
+            genesisRegtestnet.GenesisHash = "0x2d2daa04ad98068b34bc382acab077159826fb026d85fb2861f839adf4200301";
 
             switch (knownNetworkName)
             {

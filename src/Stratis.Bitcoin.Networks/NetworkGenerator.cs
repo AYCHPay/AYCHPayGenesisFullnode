@@ -335,8 +335,52 @@ namespace Stratis.Bitcoin.Networks
             this.Genesis = this.CreateGenesisBlock(consensusFactory, this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, this.GenesisReward);
             if (this.Genesis.GetHash() != uint256.Parse(genesisCheck))
             {
+                Console.WriteLine(this.ToString(false));
+                Console.WriteLine("Regenerating Genesis Block for " + this.NetworkType);
                 this.Genesis = this.SimpleGenesisBlockPow(consensusFactory);
             }
+        }
+
+        public string ToString(bool showBase58 = false)
+        {
+            StringBuilder bob = new StringBuilder();
+            bob.AppendLine("this.Name: " + this.Name + ";");
+            bob.AppendLine("this.CoinTicker: " + this.CoinTicker + ";");
+            bob.AppendLine("this.NetworkType: " + this.NetworkType + ";");
+            bob.AppendLine("this.Magic: " + this.Magic + ";");
+            bob.AppendLine("this.DefaultPort: " + this.DefaultPort + ";");
+            bob.AppendLine("this.DefaultRPCPort: " + this.DefaultRPCPort + ";");
+            bob.AppendLine("this.DefaultAPIPort: " + this.DefaultAPIPort + ";");
+            bob.AppendLine("this.DefaultSignalRPort: " + this.DefaultSignalRPort + ";");
+            bob.AppendLine("this.DefaultMaxOutboundConnections: " + this.DefaultMaxOutboundConnections + ";");
+            bob.AppendLine("this.DefaultMaxInboundConnections: " + this.DefaultMaxInboundConnections + ";");
+            bob.AppendLine("this.MaxTipAge: " + this.MaxTipAge + ";");
+            bob.AppendLine("this.MinTxFee: " + this.MinTxFee + ";");
+            bob.AppendLine("this.FallbackFee: " + this.FallbackFee + ";");
+            bob.AppendLine("this.MinRelayTxFee: " + this.MinRelayTxFee + ";");
+            bob.AppendLine("this.RootFolderName: " + this.RootFolderName + ";");
+            bob.AppendLine("this.DefaultConfigFilename: " + this.DefaultConfigFilename + ";");
+            bob.AppendLine("this.MaxTimeOffsetSeconds: " + this.MaxTimeOffsetSeconds + ";");
+            bob.AppendLine("this.DefaultBanTimeSeconds: " + this.DefaultBanTimeSeconds + ";");
+            bob.AppendLine("this.GenesisTime: " + this.GenesisTime + ";");
+            bob.AppendLine("this.GenesisNonce: " + this.GenesisNonce + ";");
+            bob.AppendLine("this.GenesisBits: " + this.GenesisBits + ";");
+            bob.AppendLine("this.GenesisVersion: " + this.GenesisVersion + ";");
+            bob.AppendLine("this.GenesisReward: " + this.GenesisReward.ToString() + ";");
+            if (showBase58)
+            {
+                for (int i = 0; i < this.Base58Prefixes.Length; i++)
+                {
+                    List<string> bytes = new List<string>();
+                    foreach (var item in this.Base58Prefixes[i])
+                    {
+                        bytes.Add("0x" + item.ToString("X2"));
+                    }
+                    bob.AppendLine("this.Base58Prefixes[" + i + "] = new byte[] {" + string.Join(", ", bytes) + "};");
+                }
+            }
+            //bob.AppendLine("this.: " + this.);
+            return bob.ToString();
         }
 
         private void BuildNetworkSeeds()
@@ -461,6 +505,9 @@ namespace Stratis.Bitcoin.Networks
             // Register rules
             this.RegisterRules(this.Consensus);
             this.RegisterMempoolRules(this.Consensus);
+
+            // Show the generated settings...
+            Console.WriteLine(this.ToString(true));
         }
 
         private void SanityCheck()
@@ -479,9 +526,10 @@ namespace Stratis.Bitcoin.Networks
                 this.GenesisNonce++;
                 this.Genesis = this.CreateGenesisBlock(consensusFactory, this.GenesisTime, this.GenesisNonce, this.GenesisBits, this.GenesisVersion, this.GenesisReward);
             }
-
-            MerkleNode newMerkleRoot = this.Genesis.GetMerkleRoot();
-            uint256 newHash = this.Genesis.GetHash();
+            
+            Console.WriteLine("Genesis Block Hash: " + this.Genesis.GetHash());
+            Console.WriteLine("Genesis Block Merkel Root: " + this.Genesis.GetMerkleRoot().Hash);
+            Console.WriteLine("Genesis Block Nonce: " + this.Genesis.Header.Nonce);
             return this.Genesis;
         }
     }
