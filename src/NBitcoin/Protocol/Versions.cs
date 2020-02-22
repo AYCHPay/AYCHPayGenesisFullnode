@@ -5,7 +5,7 @@
     /// </summary>
     public enum ProtocolVersion : uint
     {
-        PROTOCOL_VERSION = 90000,
+        PROTOCOL_VERSION = 70012,
 
         ALT_PROTOCOL_VERSION = 70000,
 

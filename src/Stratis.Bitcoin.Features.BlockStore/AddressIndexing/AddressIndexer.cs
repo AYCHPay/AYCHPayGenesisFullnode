@@ -18,7 +18,7 @@ using Stratis.Bitcoin.Controllers.Models;
 using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Primitives;
 using Stratis.Bitcoin.Utilities;
-using FileMode = LiteDB.FileMode;
+//using FileMode = LiteDB.FileMode;
 using Script = NBitcoin.Script;
 
 namespace Stratis.Bitcoin.Features.BlockStore.AddressIndexing
@@ -176,14 +176,14 @@ namespace Stratis.Bitcoin.Features.BlockStore.AddressIndexing
 
             string dbPath = Path.Combine(this.dataFolder.RootPath, AddressIndexerDatabaseFilename);
 
-            FileMode fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? FileMode.Exclusive : FileMode.Shared;
-            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Mode = fileMode });
+            ConnectionType fileMode = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? ConnectionType.Direct : ConnectionType.Shared;
+            this.db = new LiteDatabase(new ConnectionString() { Filename = dbPath, Connection = fileMode });
 
             this.addressIndexRepository = new AddressIndexRepository(this.db, this.loggerFactory);
 
             this.logger.LogDebug("Address indexing is enabled.");
 
-            this.tipDataStore = this.db.GetCollection<AddressIndexerTipData>(DbTipDataKey);
+            this.tipDataStore = (LiteCollection<AddressIndexerTipData>)this.db.GetCollection<AddressIndexerTipData>(DbTipDataKey);
 
             lock (this.lockObject)
             {
