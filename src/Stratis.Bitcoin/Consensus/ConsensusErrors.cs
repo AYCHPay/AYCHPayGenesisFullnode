@@ -145,5 +145,11 @@
         public static ConsensusError BadColdstakeInputs => new ConsensusError("bad-coldstake-inputs", "coldstake inputs contain mismatching scriptpubkeys");
 
         public static ConsensusError BadColdstakeOutputs => new ConsensusError("bad-coldstake-outputs", "coldstake outputs contain unexpected scriptpubkeys");
+
+        // GNet Pos Consensus Error
+        public static ConsensusError BadTransactionCoinstakeYearOlderThanChainYear => new ConsensusError("bad-coinstake-age-current-year", "coinstake current year age is higher than chain current year age");
+        
+        public static ConsensusError BadTransactionCoinstakeCompletedMoreYearsThanChain => new ConsensusError("bad-coinstake-age-completed-years", "coinstake claims to have completed more years than the chain exists for");
+
     }
 }
