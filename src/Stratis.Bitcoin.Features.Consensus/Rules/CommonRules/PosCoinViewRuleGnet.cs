@@ -323,12 +323,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             }
 
             // the simplest is that the stake is exclusively in the current chain year 
+            Money accruedAmount = Money.Zero;
             if (completedStakeYears == 0)
             {
                 // What would be the value of a complete year worth of staking?
                 Money annualAmount = GetAnnualStake(totalCoinStakeValueIn, completedChainYears);
                 // Return the appropriate fraction of this year
-                return Money.Coins((long)annualAmount * percentOfCurrentStakeYear);
+                accruedAmount = Money.Satoshis((long)annualAmount * percentOfCurrentStakeYear);
             }
             // slightly more interesting is when the stake span includes part of the previous chain year
             // the most interesting is when the stake spans multiple chain years, but they are handled the same
@@ -336,17 +337,18 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             {
                 // See how far back we need to go...
                 var firstYear = completedChainYears - completedStakeYears;
-                Money accruedAmount = Money.Zero;
+                
                 // For each staking year compound the accrual
-                for (int i = (int)firstYear; i <= completedChainYears; i++)
+                for (int i = (int)firstYear; i < completedChainYears; i++)
                 {
                     accruedAmount += GetAnnualStake(totalCoinStakeValueIn + accruedAmount, i);
                 }
                 // Add the current year's bit
-                accruedAmount += Money.Coins((long)(accruedAmount + totalCoinStakeValueIn) * percentOfCurrentStakeYear);
-                // Return the value
-                return accruedAmount;
+                Money currentYearAmount = Money.Satoshis((long)GetAnnualStake(totalCoinStakeValueIn, completedChainYears) * percentOfCurrentStakeYear);
+                accruedAmount += currentYearAmount;
             }
+            // Return the value
+            return accruedAmount;
         }
     }
 }
