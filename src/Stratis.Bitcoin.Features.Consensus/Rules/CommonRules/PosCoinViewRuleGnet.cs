@@ -57,7 +57,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             if (BlockStake.IsProofOfStake(block))
             {
                 var posRuleContext = context as PosRuleContext;
-                uint stakeTxHeight = passedStakeTxHeight > 0 ? passedStakeTxHeight : posRuleContext.UnspentOutputSet.AccessCoins(posRuleContext.CoinStakePrevOutputs.First().Key.PrevOut).Coins.Height;
+                uint stakeTxHeight = passedStakeTxHeight > 0 ? passedStakeTxHeight : posRuleContext.UnspentOutputSet.AccessCoins(block.Transactions[1].Inputs[0].PrevOut).Coins.Height;
                 Money stakeReward = block.Transactions[1].TotalOut - posRuleContext.TotalCoinStakeValueIn;
                 Money calcStakeReward = fees + this.GetProofOfStakeReward(height, posRuleContext.TotalCoinStakeValueIn, stakeTxHeight);
 

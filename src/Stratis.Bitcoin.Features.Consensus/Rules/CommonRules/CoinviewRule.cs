@@ -101,20 +101,17 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
 
                 this.UpdateCoinView(context, tx);
 
-                if (this is PosCoinviewRuleGnet && stakeTxHeight == 0)
+                if (this is PosCoinviewRuleGnet && BlockStake.IsProofOfStake(block) && stakeTxHeight == 0)
                 {
                     var posRuleContext = context as PosRuleContext;
-                    var posCoins = posRuleContext.UnspentOutputSet.GetCoins(posRuleContext.BlockStake.PrevoutStake.Hash).First();
-                    if (posCoins.Coins != null)
-                    {
-                        stakeTxHeight = posCoins.Coins.Height;
-                    }
+                    // If it breaks here, shout at @dangershony ;)
+                    stakeTxHeight = posRuleContext.UnspentOutputSet.AccessCoins(block.Transactions[1].Inputs[0].PrevOut).Coins.Height;
                 }
             }
 
             if (!context.SkipValidation)
             {
-                if (this is PosCoinviewRuleGnet)
+                if (this is PosCoinviewRuleGnet && BlockStake.IsProofOfStake(block))
                 {
                     ((PosCoinviewRuleGnet)this).CheckBlockReward(context, fees, index.Height, block, stakeTxHeight);
                 }
