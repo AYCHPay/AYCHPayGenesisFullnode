@@ -46,13 +46,18 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             this.stakeChain.Set(context.ValidationContext.ChainedHeaderToValidate, posRuleContext.BlockStake);
         }
 
-        /// <inheritdoc />
         public override void CheckBlockReward(RuleContext context, Money fees, int height, Block block)
+        {
+            CheckBlockReward(context, fees, height, block, 0);
+        }
+
+        /// <inheritdoc />
+        public void CheckBlockReward(RuleContext context, Money fees, int height, Block block, uint passedStakeTxHeight)
         {
             if (BlockStake.IsProofOfStake(block))
             {
                 var posRuleContext = context as PosRuleContext;
-                uint stakeTxHeight = posRuleContext.UnspentOutputSet.AccessCoins(posRuleContext.CoinStakePrevOutputs.First().Key.PrevOut).Coins.Height;
+                uint stakeTxHeight = passedStakeTxHeight > 0 ? passedStakeTxHeight : posRuleContext.UnspentOutputSet.AccessCoins(posRuleContext.CoinStakePrevOutputs.First().Key.PrevOut).Coins.Height;
                 Money stakeReward = block.Transactions[1].TotalOut - posRuleContext.TotalCoinStakeValueIn;
                 Money calcStakeReward = fees + this.GetProofOfStakeReward(height, posRuleContext.TotalCoinStakeValueIn, stakeTxHeight);
 
