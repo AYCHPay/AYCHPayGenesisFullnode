@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NBitcoin;
@@ -43,6 +44,7 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             Money fees = Money.Zero;
             var inputsToCheck = new List<(Transaction tx, int inputIndexCopy, TxOut txOut, PrecomputedTransactionData txData, TxIn input, DeploymentFlags flags)>();
 
+            uint stakeTxHeight = 0;
             for (int txIndex = 0; txIndex < block.Transactions.Count; txIndex++)
             {
                 Transaction tx = block.Transactions[txIndex];
@@ -98,11 +100,28 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
                 }
 
                 this.UpdateCoinView(context, tx);
+
+                if (this is PosCoinviewRuleGnet && stakeTxHeight == 0)
+                {
+                    var posRuleContext = context as PosRuleContext;
+                    var posCoins = posRuleContext.UnspentOutputSet.GetCoins(posRuleContext.BlockStake.PrevoutStake.Hash).First();
+                    if (posCoins.Coins != null)
+                    {
+                        stakeTxHeight = posCoins.Coins.Height;
+                    }
+                }
             }
 
             if (!context.SkipValidation)
             {
-                this.CheckBlockReward(context, fees, index.Height, block);
+                if (this is PosCoinviewRuleGnet)
+                {
+                    ((PosCoinviewRuleGnet)this).CheckBlockReward(context, fees, index.Height, block, stakeTxHeight);
+                }
+                else 
+                {
+                    this.CheckBlockReward(context, fees, index.Height, block);
+                }
 
                 // Start the Parallel loop on a thread so its result can be awaited rather than blocking
                 Task<ParallelLoopResult> checkInputsInParallel = Task.Run(() =>
