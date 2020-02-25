@@ -44,7 +44,7 @@ namespace Stratis.Bitcoin.Features.Consensus
     /// <item>Coinbase 'scriptSig' starts with serialized block height value. This means that coinbase transaction commits to the height of the block it appears in.</item>
     /// </list>
     /// </remarks>
-    public class StakeValidator : IStakeValidator
+    public class StakeValidatorGnet : IStakeValidator
     {
         /// <summary>When checking the POS block signature this determines the maximum push data (public key) size following the OP_RETURN in the nonspendable output.</summary>
         private const int MaxPushDataSize = 40;
@@ -67,6 +67,9 @@ namespace Stratis.Bitcoin.Features.Consensus
 
         /// <inheritdoc cref="Network"/>
         private readonly Network network;
+        
+        // Averaging window for the difficulty adjustment calculation
+        private readonly int averagingWindow;
 
         /// <inheritdoc />
         /// <param name="network">Specification of the network the node runs on - regtest/testnet/mainnet.</param>
@@ -74,13 +77,14 @@ namespace Stratis.Bitcoin.Features.Consensus
         /// <param name="chainIndexer">Chain of headers.</param>
         /// <param name="coinView">Used for getting UTXOs.</param>
         /// <param name="loggerFactory">Factory for creating loggers.</param>
-        public StakeValidator(Network network, IStakeChain stakeChain, ChainIndexer chainIndexer, ICoinView coinView, ILoggerFactory loggerFactory)
+        public StakeValidatorGnet(Network network, IStakeChain stakeChain, ChainIndexer chainIndexer, ICoinView coinView, ILoggerFactory loggerFactory)
         {
             this.logger = loggerFactory.CreateLogger(this.GetType().FullName);
             this.stakeChain = stakeChain;
             this.chainIndexer = chainIndexer;
             this.coinView = coinView;
             this.network = network;
+            this.averagingWindow = (int)System.Math.Ceiling(this.network.Consensus.TargetSpacing.TotalSeconds * 1.5d);
         }
 
         /// <inheritdoc/>
@@ -99,6 +103,62 @@ namespace Stratis.Bitcoin.Features.Consensus
 
             return startChainedHeader;
         }
+
+        private Dictionary<int, ChainedHeader> GetAncestors(ChainedHeader startChainedHeader, int numberOfAncestors)
+        {
+            Guard.NotNull(stakeChain, nameof(stakeChain));
+            Guard.Assert(startChainedHeader != null);
+            int iteration = 0;
+            Dictionary<int, ChainedHeader> output = new Dictionary<int, ChainedHeader>();
+            output[startChainedHeader.Height] = startChainedHeader;
+            while ((startChainedHeader.Previous != null) && (iteration <= numberOfAncestors))
+            {
+                var index = startChainedHeader.Previous.Height;
+                output[index] = startChainedHeader.Previous;
+                startChainedHeader = startChainedHeader.Previous;
+                iteration++;
+            }
+            return output;
+        }
+
+        /// <inheritdoc/>
+        public Target CalculateRetarget(ChainedHeader chainedHeader, bool proofOfStake)
+        {
+            int T = (int)System.Math.Floor(this.network.Consensus.TargetSpacing.TotalSeconds);
+            int N = this.averagingWindow;
+            long k = N * (N + 1) * T / 2;
+            int height = chainedHeader.Height;
+
+            Guard.Assert(height > N);
+            BigInteger sum_target = new BigInteger(0.ToString());
+            long t = 0;
+            long j = 0;
+            long solvetime;
+
+            Dictionary<int, ChainedHeader> headers = GetAncestors(chainedHeader, height - N + 1);
+
+            // Loop through N most recent blocks. 
+            for (int i = height - N + 1; i <= height; i++)
+            {
+                ChainedHeader block = headers[i];
+                ChainedHeader block_Prev = headers[i - 1];
+                solvetime = block.Header.BlockTime.ToUnixTimeSeconds() - block_Prev.Header.BlockTime.ToUnixTimeSeconds();
+                solvetime = System.Math.Max(-6 * T, System.Math.Min(solvetime, 6 * T));
+                j++;
+                t += solvetime * j;  // Weighted solvetime sum.
+                BigInteger target = block.Header.Bits.ToBigInteger();
+                BigInteger knProduct = new BigInteger((k * N).ToString());
+                sum_target = sum_target.Add(target.Divide(knProduct));
+            }
+            // Keep t reasonable to >= 1/10 of expected t.
+            if (t < k / 10)
+            {
+                t = k / 10;
+            }
+            BigInteger next_target = sum_target.Multiply(new BigInteger(t.ToString()));
+            return new Target(next_target);
+        }
+
 
         /// <inheritdoc/>
         public Target CalculateRetarget(uint firstBlockTime, Target firstBlockTarget, uint secondBlockTime, BigInteger targetLimit)
@@ -179,8 +239,15 @@ namespace Stratis.Bitcoin.Features.Consensus
                 return lastPowPosBlock.Header.Bits;
             }
 
-            Target finalTarget = this.CalculateRetarget(lastPowPosBlock.Header.Time, lastPowPosBlock.Header.Bits, prevLastPowPosBlock.Header.Time, targetLimit);
+            // Not enough blocks to calculate the averages
+            if (lastPowPosBlock.Height < consensus.LastPOWBlock + this.averagingWindow )
+            {
+                var res = new Target(targetLimit);
+                this.logger.LogTrace("(-)[HEIGHT_BELOW_AVERAGING_WINDOWS]:'{0}'", lastPowPosBlock.Height);
+                return res;
+            }
 
+            Target finalTarget = this.CalculateRetarget(chainedHeader, proofOfStake);
             return finalTarget;
         }
 
@@ -484,11 +551,6 @@ namespace Stratis.Bitcoin.Features.Consensus
 
             bool verifyRes = new PubKey(data).Verify(blockHash, new ECDSASignature(signature.Signature));
             return verifyRes;
-        }
-
-        public Target CalculateRetarget(ChainedHeader chainedHeader, bool proofOfStake)
-        {
-            throw new NotImplementedException();
         }
     }
 }

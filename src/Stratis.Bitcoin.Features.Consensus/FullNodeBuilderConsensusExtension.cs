@@ -56,7 +56,7 @@ namespace Stratis.Bitcoin.Features.Consensus
                             .AddSingleton<IStakdb, DBreezeCoindb>(provider => provider.GetService<DBreezeCoindb>());
                         services.AddSingleton<ICoinView, CachedCoinView>();
                         services.AddSingleton<StakeChainStore>().AddSingleton<IStakeChain, StakeChainStore>(provider => provider.GetService<StakeChainStore>());
-                        services.AddSingleton<IStakeValidator, StakeValidator>();
+                        services.AddSingleton<IStakeValidator, StakeValidatorGnet>();
                         services.AddSingleton<IRewindDataIndexCache, RewindDataIndexCache>();
                         services.AddSingleton<IConsensusRuleEngine, PosConsensusRuleEngine>();
                         services.AddSingleton<IChainState, ChainState>();
