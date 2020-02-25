@@ -58,7 +58,7 @@ namespace HashToBeWild.Utilities
             genesisTestnet.CoinType = 1;
             genesisTestnet.GenesisNonce = 228307;
             genesisTestnet.GenesisHash = "0x0000cbb2d92858627721fd445a25ebdb9da9dc7a2ffb0213b1b7a9b488112dba";
-            genesisTestnet.CoinbaseMaturity = 5;
+            genesisTestnet.CoinbaseMaturity = 1;
 
             // Set regtestnet changes from testnet
             NetworkSeed genesisRegtestnet = genesisTestnet.ShallowCopy();
