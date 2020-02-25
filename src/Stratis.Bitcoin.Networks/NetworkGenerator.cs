@@ -47,6 +47,7 @@ namespace Stratis.Bitcoin.Networks
         public PhoneMnemonicsMapper PhoneMnemonicsMap { get; set; }
 
         public Target PowLimit { get; set; }
+        public Target PosLimit { get; set; }
 
         protected void RegisterMempoolRules(IConsensus consensus)
         {
@@ -124,6 +125,7 @@ namespace Stratis.Bitcoin.Networks
                     {
                         this.NetworkType = NBitcoin.NetworkType.Mainnet;
                         this.PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
+                        this.PosLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
                         this.GenesisBits = 0x1e0fffff;
                     }
                     break;
@@ -132,6 +134,7 @@ namespace Stratis.Bitcoin.Networks
                     {
                         this.NetworkType = NBitcoin.NetworkType.Testnet;
                         this.PowLimit = new Target(new uint256("0000ffff00000000000000000000000000000000000000000000000000000000"));
+                        this.PosLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
                         this.GenesisBits = this.PowLimit;
                     }
                     break;
@@ -140,6 +143,7 @@ namespace Stratis.Bitcoin.Networks
                     {
                         this.NetworkType = NBitcoin.NetworkType.Regtest;
                         this.PowLimit = new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
+                        this.PosLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
                         this.GenesisBits = this.PowLimit;
                     }
                     break;
@@ -302,8 +306,8 @@ namespace Stratis.Bitcoin.Networks
                 minimumChainWork: null,
                 isProofOfStake: true,
                 lastPowBlock: this.seed.LastPowBlock,
-                proofOfStakeLimit: new BigInteger(uint256.Parse("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
-                proofOfStakeLimitV2: new BigInteger(uint256.Parse("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff").ToBytes(false)),
+                proofOfStakeLimit: this.PosLimit.ToBigInteger(),
+                proofOfStakeLimitV2: this.PosLimit.ToBigInteger(),
                 proofOfStakeReward: Money.COIN,
                 maxReorgLength: (uint)Math.Round((decimal)(this.seed.MajorityWindow / 2)),
                 majorityEnforceBlockUpgrade: (int)Math.Round(this.seed.MajorityWindow * 0.75),
