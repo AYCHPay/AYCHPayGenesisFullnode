@@ -71,7 +71,7 @@ namespace Stratis.Bitcoin.Networks
                 .Register<HeaderTimeChecksRule>()
                 .Register<HeaderTimeChecksPosRule>()
                 .Register<StratisBugFixPosFutureDriftRule>()
-                .Register<CheckDifficultyPosRule>()
+                .Register<CheckDifficultyPosRuleGnet>()
                 .Register<StratisHeaderVersionRule>()
                 .Register<ProvenHeaderSizeRule>()
                 .Register<ProvenHeaderCoinstakeRule>();
@@ -499,7 +499,7 @@ namespace Stratis.Bitcoin.Networks
             this.DefaultConfigFilename = this.RootFolderName + ".conf";
 
             // Time thresholds
-            this.MaxTipAge = this.seed.PowTargetSpacing * 144; // same ratio as bitcoin
+            this.MaxTipAge = this.seed.PowTargetSpacing * 144000; // same ratio as bitcoin
             this.MaxTimeOffsetSeconds = this.seed.PowTargetSpacing * 7; // same ratio as bitcoin
             this.DefaultBanTimeSeconds = (int)(this.Consensus.MaxReorgLength * this.Consensus.TargetSpacing.TotalSeconds) / 2;
 
