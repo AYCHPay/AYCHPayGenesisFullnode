@@ -254,29 +254,29 @@ namespace Stratis.Bitcoin.Networks
                 [StratisBIP9Deployments.CSV] = new BIP9DeploymentsParameters(
                     "CSV",
                     0,
-                    this.seed.Created.ToUniversalTime(),
-                    this.seed.Created.ToUniversalTime(),
+                    BIP9DeploymentsParameters.AlwaysActive,
+                    999999999,
                     BIP9DeploymentsParameters.AlwaysActive),
 
                 [StratisBIP9Deployments.Segwit] = new BIP9DeploymentsParameters(
                     "Segwit",
                     1,
-                    this.seed.Created.ToUniversalTime(),
-                    this.seed.Created.ToUniversalTime(),
+                    BIP9DeploymentsParameters.AlwaysActive,
+                    999999999,
                     BIP9DeploymentsParameters.AlwaysActive),
 
                 [StratisBIP9Deployments.ColdStaking] = new BIP9DeploymentsParameters(
                     "ColdStaking",
                     2,
-                    this.seed.Created.ToUniversalTime(),
-                    this.seed.Created.ToUniversalTime(),
+                    BIP9DeploymentsParameters.AlwaysActive,
+                    999999999,
                     BIP9DeploymentsParameters.AlwaysActive),
 
                 [StratisBIP9Deployments.TestDummy] = new BIP9DeploymentsParameters(
                     "TestDummy",
                     28,
-                    this.seed.Created.ToUniversalTime(),
-                    this.seed.Created.ToUniversalTime(),
+                    BIP9DeploymentsParameters.AlwaysActive,
+                    999999999,
                     BIP9DeploymentsParameters.AlwaysActive)
 
             };
