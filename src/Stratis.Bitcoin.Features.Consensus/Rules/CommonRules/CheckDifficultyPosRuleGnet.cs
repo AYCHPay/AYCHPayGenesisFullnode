@@ -36,7 +36,8 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             // TODO: In the future once we migrated to fully C# network it might be good to consider signaling in the block header the network type.
 
             ChainedHeader chainedHeader = context.ValidationContext.ChainedHeaderToValidate;
-            if (chainedHeader.Height > this.Parent.Network.Consensus.LastPOWBlock + (int)System.Math.Ceiling(this.Parent.Network.Consensus.TargetSpacing.TotalSeconds * 1.5d))
+            var waypoint = this.Parent.Network.Consensus.LastPOWBlock + (int)System.Math.Ceiling(this.Parent.Network.Consensus.TargetSpacing.TotalSeconds * 1.5d);
+            if (chainedHeader.Height >= waypoint)
             {
                 // I can hardcode the true value for the calculate retarget, because we're inside an if that already enforces that.
                 Target nextWorkRequired = this.PosParent.StakeValidator.CalculateRetarget(chainedHeader, true);
@@ -44,10 +45,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
                 BlockHeader header = context.ValidationContext.ChainedHeaderToValidate.Header;
 
                 // Check proof of stake.
-                if (header.Bits != nextWorkRequired)
+                if (header.Bits.Difficulty < nextWorkRequired.Difficulty)
                 {
-                    this.Logger.LogTrace("(-)[BAD_DIFF_BITS]");
-                    ConsensusErrors.BadDiffBits.Throw();
+                    if (chainedHeader.Height != waypoint || (chainedHeader.Height == waypoint && header.Bits != new Target(this.Parent.Network.Consensus.ProofOfStakeLimit)))
+                    {
+                        this.Logger.LogTrace("(-)[BAD_DIFF_BITS]");
+                        ConsensusErrors.BadDiffBits.Throw();
+                    }
                 }
             }
         }
