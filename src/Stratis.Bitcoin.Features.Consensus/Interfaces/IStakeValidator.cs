@@ -123,6 +123,17 @@ namespace Stratis.Bitcoin.Features.Consensus.Interfaces
         Target CalculateRetarget(uint firstBlockTime, Target firstBlockTarget, uint secondBlockTime, BigInteger targetLimit);
 
         /// <summary>
+        /// Calculates the difficulty based on a range of blocks.
+        /// </summary>
+        /// <param name="chainedHeader">Block header for which to calculate the target difficulty.</param>
+        /// <param name="proofOfStake"><c>true</c> for calculation of PoS difficulty target, <c>false</c> for calculation of PoW difficulty target.</param>
+        /// <returns>The new difficulty target as the outcome of the range of blocks.</returns>
+        /// <remarks>
+        /// This is very roughly based on zawy's code. More info at: https://github.com/zawy12/difficulty-algorithms/issues/3#issuecomment-388386175
+        /// </remarks>
+        Target CalculateRetarget(ChainedHeader chainedHeader, bool proofOfStake);
+
+        /// <summary>
         /// Verifies transaction's signature.
         /// </summary>
         /// <param name="coin">UTXO that is spent in the transaction.</param>
