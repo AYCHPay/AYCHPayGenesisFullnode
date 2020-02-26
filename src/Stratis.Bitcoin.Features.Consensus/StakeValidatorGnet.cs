@@ -240,7 +240,7 @@ namespace Stratis.Bitcoin.Features.Consensus
             }
 
             // Not enough blocks to calculate the averages
-            if (lastPowPosBlock.Height <= consensus.LastPOWBlock + this.averagingWindow )
+            if (lastPowPosBlock.Height < consensus.LastPOWBlock + this.averagingWindow )
             {
                 var res = new Target(targetLimit);
                 this.logger.LogTrace("(-)[HEIGHT_BELOW_AVERAGING_WINDOWS]:'{0}'", lastPowPosBlock.Height);
