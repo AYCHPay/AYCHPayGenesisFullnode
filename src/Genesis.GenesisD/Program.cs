@@ -18,7 +18,7 @@ using Stratis.Bitcoin.Networks;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Features.Diagnostic;
 
-namespace Stratis.GenesisD
+namespace Genesis.GenesisD
 {
     public class Program
     {
