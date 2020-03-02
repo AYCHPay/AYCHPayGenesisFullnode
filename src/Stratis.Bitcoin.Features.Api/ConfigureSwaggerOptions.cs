@@ -63,9 +63,9 @@ namespace Stratis.Bitcoin.Features.Api
         {
             var info = new OpenApiInfo()
             {
-                Title = "Stratis Node API",
+                Title = "Genesis FullNode API",
                 Version = description.ApiVersion.ToString(),
-                Description = "Access to the Stratis Node's core features."
+                Description = "Access to the Genesis FullNode core features."
             };
 
             if (info.Version.Contains("dev"))
