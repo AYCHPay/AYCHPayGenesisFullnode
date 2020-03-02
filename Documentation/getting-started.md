@@ -1,6 +1,5 @@
 
-
-# Getting started - Building and running a Stratis Full Node 
+# Getting started - Building and running a Genesis Full Node 
 
 ---------------
 
@@ -13,7 +12,7 @@
 ## Prerequisites
 
 To install and run the node, you need
-* [.NET Core 2.1](https://www.microsoft.com/net/download/core)
+* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 * [Git](https://git-scm.com/)
 
 ## Build instructions
@@ -21,33 +20,33 @@ To install and run the node, you need
 ### Get the repository and its dependencies
 
 ```
-git clone https://github.com/stratisproject/StratisBitcoinFullNode.git  
-cd StratisBitcoinFullNode/src
+git clone https://github.com/genesisofficial/genesisfullnode.git
+cd genesisfullnode/src
 ```
 
 ### Build and run the code
-With this node, you can connect to either the Stratis network or the Bitcoin network, either on MainNet or TestNet.
+With this node, you can connect to either the Genesis network or the Bitcoin network, either on MainNet or TestNet.
 So you have 4 options:
 
-1. To run a <b>Stratis</b> node on <b>MainNet</b>, do
+1. To run a <b>Genesis</b> node on <b>Mainnet</b>, do
 ```
-cd Stratis.StratisD
+cd Genesis.GenesisD
 dotnet run
 ```  
 
-2. To run a <b>Stratis</b>  node on <b>TestNet</b>, do
+2. To run a <b>Genesis</b>  node on <b>Testnet</b>, do
 ```
-cd Stratis.StratisD
+cd Genesis.GenesisD
 dotnet run -testnet
 ```  
 
-3. To run a <b>Bitcoin</b> node on <b>MainNet</b>, do
+3. To run a <b>Bitcoin</b> node on <b>Mainnet</b>, do
 ```
 cd Stratis.BitcoinD
 dotnet run
 ```  
 
-4. To run a <b>Bitcoin</b> node on <b>TestNet</b>, do
+4. To run a <b>Bitcoin</b> node on <b>Testnet</b>, do
 ```
 cd Stratis.BitcoinD
 dotnet run -testnet
@@ -57,32 +56,19 @@ dotnet run -testnet
 
 You can get a list of command line arguments to pass to the node with the -help command line argument. For example:
 ```
-cd Stratis.StratisD
+cd Genesis.GenesisD
 dotnet run -help
 ```  
 
 ### Script
-We have a nifty little script that can execute all the previous commands for you, including starting the node.  
-You just need to edit the file and specify whether you want to run a Stratis or a Bitcoin node, on MainNet or Testnet.  
-It's located [here](https://gist.github.com/bokobza/e68832f5d7d4102bcb33fcde8d9a72fb#file-build-and-run-a-stratis-node-ps1).
-
-### Faucet
-If you need testnet funds (TSTRAT) for testing there is a faucet located [here](https://faucet.stratisplatform.com/).
-
-Docker Containers
--------------------
-
-Two containers are available [here](https://hub.docker.com/u/stratisplatform/)
-
-- stratis-node: Run on the Bitcoin Main or Test networks
-- stratis-node-sim: Join our simulation network
+Ease of use scripts for multiple platforms can be found [here](https://github.com/genesisofficial/genesisfullnode/Scripts/)
 
 Swagger Endpoints
 -------------------
 
 Once the node is running, a Swagger interface (web UI for testing an API) is available.
 
-* For Bitcoin: http://localhost:37220/swagger/
-* For Stratis: http://localhost:37221/swagger/
+* For Genesis Mainnet: http://localhost:4640/swagger/
+* For Genesis Testnet: https://localhost:9465/swagger/
+* For Bitcoin Mainnet: http://localhost:37220/swagger/
 * For Bitcoin Testnet: http://localhost:38220/swagger/
-* For Stratis Testnet: http://localhost:38221/swagger/
