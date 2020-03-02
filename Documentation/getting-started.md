@@ -69,6 +69,6 @@ Swagger Endpoints
 Once the node is running, a Swagger interface (web UI for testing an API) is available.
 
 * For Genesis Mainnet: http://localhost:4640/swagger/
-* For Genesis Testnet: https://localhost:9465/swagger/
+* For Genesis Testnet: http://localhost:9465/swagger/
 * For Bitcoin Mainnet: http://localhost:37220/swagger/
 * For Bitcoin Testnet: http://localhost:38220/swagger/
