@@ -15,7 +15,7 @@ using Stratis.Bitcoin.Features.Wallet;
 using Stratis.Bitcoin.Networks;
 using Stratis.Bitcoin.Utilities;
 
-namespace Stratis.GenesisDnsD
+namespace Genesis.GenesisDnsD
 {
     /// <summary>
     /// Main entry point.
