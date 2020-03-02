@@ -90,9 +90,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{0C6FDC
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratis.GenesisD", "Stratis.GenesisD\Stratis.GenesisD.csproj", "{35817502-4A5A-43A1-A31B-BE4E1346511D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genesis.GenesisD", "Genesis.GenesisD\Genesis.GenesisD.csproj", "{35817502-4A5A-43A1-A31B-BE4E1346511D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratis.GenesisDnsD", "Stratis.GenesisDnsD\Stratis.GenesisDnsD.csproj", "{C4F89C98-47CE-45EE-A3C5-F18F9709439A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genesis.GenesisDnsD", "Genesis.GenesisDnsD\Genesis.GenesisDnsD.csproj", "{C4F89C98-47CE-45EE-A3C5-F18F9709439A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashToBeWild.Utilities", "HashToBeWild.Utilities\HashToBeWild.Utilities.csproj", "{02FCE5B7-9314-4765-98A4-7370D1E48759}"
 EndProject
