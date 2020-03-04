@@ -40,12 +40,13 @@ namespace Stratis.Bitcoin.Features.Consensus.Rules.CommonRules
             if (chainedHeader.Height >= waypoint)
             {
                 // I can hardcode the true value for the calculate retarget, because we're inside an if that already enforces that.
-                Target nextWorkRequired = this.PosParent.StakeValidator.CalculateRetarget(chainedHeader, true);
+                Target nextWorkRequired = this.PosParent.StakeValidator.CalculateRetarget(chainedHeader.Previous, true);
 
                 BlockHeader header = context.ValidationContext.ChainedHeaderToValidate.Header;
 
                 // Check proof of stake.
-                if (header.Bits.Difficulty < nextWorkRequired.Difficulty)
+                //if (header.Bits.Difficulty < nextWorkRequired.Difficulty)
+                if (header.Bits != nextWorkRequired)
                 {
                     if (chainedHeader.Height != waypoint || (chainedHeader.Height == waypoint && header.Bits != new Target(this.Parent.Network.Consensus.ProofOfStakeLimit)))
                     {
