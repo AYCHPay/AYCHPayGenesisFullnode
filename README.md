@@ -2,7 +2,7 @@
 
 Genesis Network Blockchain in C#
 &middot;
-[![Github License](https://img.shields.io/npm/l/express.svg)](https://github.com/genesisofficial/genesis/blob/master/COPYING)
+[![Github License](https://img.shields.io/npm/l/express.svg)](https://github.com/genesisofficial/genesisfullnode/blob/master/LICENSE)
 =====================================
 
 https://genesisnetwork.io
